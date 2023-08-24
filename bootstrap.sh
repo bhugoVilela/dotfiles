@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ./utils/ssh_utils.sh
+
 CUSTOM_SCRIPTS_TARGET="$HOME/.local/bin"
 NVM_DIR="$HOME/.nvm"
 
@@ -27,8 +29,51 @@ install_custom_scripts() {
 }
 
 configure_ssh() {
-	echo "configuring ssh..."
-	echo "TODO this is a noop for now"
+	_echo "Configuring SSH..."
+	keys="$(ssh_existing_keys)"
+	if [[ $keys ]]; then
+		_echo "Some SSH keys already exist:"
+		echo "$keys"
+		_echo "What do you want to do?"
+		echo "Use an existing key (a)"
+		echo "Generate a new key (b)"
+		echo "Cancel (c)"
+		read -k 1 option
+
+		case "$option" in
+			"a")
+				ssh_select_and_copy_key
+			;;
+			"b")
+				ssh_generate_new_key
+				ssh_select_and_copy_key
+			;;
+			"c")
+				_echo "aborted"
+				return 0
+			;;
+		esac
+	else
+		_echo "No SSH keys exist"
+		_echo "What do you want to do?"
+		echo "Generate a new key (a)"
+		echo "Cancel (c)"
+		read -k 1 option
+
+		case "$option" in
+			"a")
+				ssh_generate_new_key
+				ssh_select_and_copy_key
+			;;
+			"c")
+				_echo "aborted"
+				return 0
+			;;
+		esac
+	fi
+	_echo "The public key's contents have been copied to the clipboard. Go to github.com and add it to your account"
+	_echo "once done, press any key to continue"
+	read -k 1 option
 }
 
 configure_zsh() {
@@ -43,6 +88,7 @@ configure_zsh() {
 		_echo ".zshrc-extras was already added to .zshrc"
 	fi
 }
+
 configure_bash() {
 	cat ~/.bashrc | grep ". ~/bashrc-extras" >/dev/null
 	if [ $? -ne 0 ]; then
@@ -103,9 +149,9 @@ xcode-select --install
 setup_XDG_CONFIG_HOME
 setup_local_bin
 setup_brew
-configure_ssh
 configure_zsh
 configure_bash
 install_dotfiles
 setup_neovim
 install_custom_scripts
+configure_ssh

@@ -39,6 +39,7 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 -- local transform_mod = require('telescope.actions.mt').transform_mod
 
+-- TODO, read from config file on startup
 local Favorite = {
 	{ "Desktop",       "~/Desktop" },
 	{ "Code",          "~/code" },
