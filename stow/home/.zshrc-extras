@@ -1,0 +1,11 @@
+# DO NOT DELETE
+# this is part of the .dotfiles git repo
+# it adds extra configuration to the .zshrc file
+
+# adds ~/.local/bin to PATH
+path+=("$HOME/.local/bin")
+export PATH
+
+# configures NVM
+export NVM_DIR="$HOME/.nvm"
+source $(brew --prefix nvm)/nvm.sh

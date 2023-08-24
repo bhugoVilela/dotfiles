@@ -1,0 +1,6 @@
+TEXT=""
+TEXT=`cat package.json | tr -d ' \n\t"{}' `
+RESULT=`echo $TEXT  | sed "s/.*engines:node://g" | sed "s/\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/g"`
+echo $RESULT
+
+nvm use $RESULT

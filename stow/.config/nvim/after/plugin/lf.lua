@@ -1,0 +1,8 @@
+-- require("lf").setup({
+-- 	escape_quit = false,
+-- 	border = "rounded",
+-- 	-- highlights = {FloatBorder = {guifg = require("kimbox.palette").colors.magenta}}
+-- })
+-- TODO choose a better remap
+-- who da fuq thought C-o is a good idea?... smh
+-- vim.keymap.set("n", "<C-o>", ":Lf<CR>")

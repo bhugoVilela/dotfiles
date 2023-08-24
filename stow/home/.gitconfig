@@ -1,0 +1,22 @@
+[core]
+	excludesfile = /Users/bhugo/.gitignore_global
+	editor = nvim
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[user]
+	name = bhugo
+	email = 41992011+bhugoVilela@users.noreply.github.com
+[commit]
+	template = /Users/bhugo/.stCommitMsg
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	com = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -1 HEAD

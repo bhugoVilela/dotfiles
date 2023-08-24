@@ -1,0 +1,2 @@
+#!/usr/bin/env zsh
+ifconfig | grep "inet " | grep -v 127.0.0.1 | sed 's/netmask.*//g' | sed 's/inet//g' | awk '{print "http://"$1":3000/"}'
