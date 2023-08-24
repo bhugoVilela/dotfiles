@@ -1,19 +1,21 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 CUSTOM_SCRIPTS_TARGET="$HOME/.local/bin"
 NVM_DIR="$HOME/.nvm"
 
+[[ -f  "./utils/ssh_utils.sh" ]] && source './utils/ssh_utils.sh'
+
 download_repo_if_needed() {
 	if [[ -d ".git" ]]; then
-		source ./utils/ssh_utils.sh
 		return 0
 	fi
 	# download git repository
-	wget https://github.com/bhugovilela/dotfiles/archive/main.zip
-	unzip main.zip
-	cd ./dotfiles-main
-	rm main.zip
-	source ./utils/ssh_utils.sh
+	curl -LJO https://github.com/bhugovilela/dotfiles/archive/main.zip --output main.zip
+	unzip ./dotfiles-main.zip
+	mv ./dotfiles-main ./.dotfiles
+	cd ./.dotfiles
+	rm ../dotfiles-main.zip
+	[[ -f  "./utils/ssh_utils.sh" ]] && source './utils/ssh_utils.sh'
 }
 
 _echo() {
@@ -32,18 +34,16 @@ reload_path() {
 
 # creates symlinks
 install_dotfiles() {
-	mkdir ~/.config
+	mkdir ~/.config || echo ""
 	_echo "stowing .config"
 	stow --dir=./stow --target=$HOME/.config .config
 	_echo 'stowing $HOME dotfiles'
 	stow --dir=./stow --target=$HOME home
-	_echo 'stowing custom scripts'
-	stow --dir=./stow --target=$CUSTOM_SCRIPTS_TARGET custom_scripts
 }
 
 install_custom_scripts() {
 	_echo "stowing custom scripts"
-	stow --dir=./stow --target=/usr/local/bin custom_scripts
+	stow --dir=./stow --target="$CUSTOM_SCRIPTS_TARGET" custom_scripts
 }
 
 configure_ssh() {
@@ -121,8 +121,13 @@ configure_bash() {
 setup_brew() {
 	_echo "installing Homebrew"
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+	_echo "adding Homebrew to path"
+	(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/hugotest/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+
 	_echo "running brew bundle"
-	brew bundle
+	brew bundle || echo "Brew finished with some errors"
 	reload_path
 }
 
@@ -149,20 +154,26 @@ setup_local_bin() {
 	echo "here1"
 	if [ ! -d "${HOME}/.local/bin" ]; then
 	  _echo "Setting up ~/.local/bin directory..."
-	  mkdir -pv "${HOME}/.local/bin"
+	  mkdir -pv "${HOME}/.local/bin" || echo ""
 	fi
 	reload_path
 }
 
 setup_nvm() {
-	echo "here2"
 	mkdir ~/.nvm
+	nvm install node
 }
 
 setup_neovim() {
 	_echo "running fzf installation script..."
 	$(brew --prefix)/opt/fzf/install
+
+	_echo "installing Packer..."
+	git clone https://github.com/wbthomason/packer.nvim\
+ 	~/.local/share/nvim/site/pack/packer/opt/packer.nvim
+
 	reload_path
+	_echo "NeoVim installation finished. Don't forget to run PackerSync on first boot"
 }
 
 assert_os

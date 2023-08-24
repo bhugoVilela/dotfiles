@@ -1,14 +1,5 @@
 ssh_existing_keys() {
-	keys="$(ls ~/.ssh/*.pub)"
-	if [[ $? != 0 ]]; then
-		return 1
-	else
-		if [[ $keys ]]; then
-			echo "$keys"
-		else
-			return 1
-		fi
-	fi
+	ls ~/.ssh/*.pub || echo ''
 }
 
 ssh_generate_new_key() {
