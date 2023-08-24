@@ -1,14 +1,20 @@
-# TODO
-- xcode-select install
-- brew install
-    - git
-    - fzf
-    - nvim
-    - node / nvm?
-    - iTerm2
-- configure github ssh
-- bootstrap dotfiles (ln/cp .configfiles)
-- configure zsh
-- install custom scripts (to /usr/local/bin)
-    - whatsmyip
-    - use-node
+# Dotfiles
+
+This is my collection of dotfiles for quickly
+getting my Dev Env up and running on a new macbook
+
+## Instalation
+### From Git
+1. Clone the repository
+2. run `bootstrap.sh`
+
+### From scratch
+It doesn't need to have any dependencies installed
+not git, homebrew, anything. You can run this on
+a fresh macbook
+
+```
+curl https://raw.githubusercontent.com/bhugovilela/dotfiles/main/bootstrap.sh | zsh
+
+```
+This will download the bootstrap.sh script and execute it

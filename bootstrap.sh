@@ -1,15 +1,33 @@
 #!/usr/bin/env bash
 
-source ./utils/ssh_utils.sh
-
 CUSTOM_SCRIPTS_TARGET="$HOME/.local/bin"
 NVM_DIR="$HOME/.nvm"
+
+download_repo_if_needed() {
+	if [[ -d ".git" ]]; then
+		source ./utils/ssh_utils.sh
+		return 0
+	fi
+	# download git repository
+	wget https://github.com/bhugovilela/dotfiles/archive/main.zip
+	unzip main.zip
+	cd ./dotfiles-main
+	rm main.zip
+	source ./utils/ssh_utils.sh
+}
 
 _echo() {
   local fmt="$1"; shift
 
   # shellcheck disable=SC2059
   printf "\\n[DOTFILES] ${fmt}\\n" "$@"
+}
+
+reload_path() {
+	if [[ -f ~/.zshrc ]]; then
+		_echo "Reloading ~/.zshrc..."
+		source ~/.zshrc
+	fi
 }
 
 # creates symlinks
@@ -87,6 +105,7 @@ configure_zsh() {
 	else
 		_echo ".zshrc-extras was already added to .zshrc"
 	fi
+	reload_path
 }
 
 configure_bash() {
@@ -104,6 +123,7 @@ setup_brew() {
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	_echo "running brew bundle"
 	brew bundle
+	reload_path
 }
 
 assert_os() {
@@ -126,32 +146,46 @@ setup_XDG_CONFIG_HOME() {
 }
 
 setup_local_bin() {
+	echo "here1"
 	if [ ! -d "${HOME}/.local/bin" ]; then
 	  _echo "Setting up ~/.local/bin directory..."
 	  mkdir -pv "${HOME}/.local/bin"
 	fi
+	reload_path
 }
 
 setup_nvm() {
+	echo "here2"
 	mkdir ~/.nvm
 }
 
 setup_neovim() {
 	_echo "running fzf installation script..."
 	$(brew --prefix)/opt/fzf/install
+	reload_path
 }
 
-# MAIN
 assert_os
 sudo -v
-set -e # exits script if any function returns non 0
-xcode-select --install
-setup_XDG_CONFIG_HOME
-setup_local_bin
-setup_brew
-configure_zsh
-configure_bash
-install_dotfiles
-setup_neovim
-install_custom_scripts
-configure_ssh
+
+if [[ "$1" = 'dry' ]]; then
+	_echo "DRY RUN. No installation was performed"
+	setup_local_bin
+	setup_nvm
+else
+	# MAIN
+	set -e # exits script if any function returns non 0
+	xcode-select --install
+	download_repo_if_needed
+	setup_XDG_CONFIG_HOME
+	setup_local_bin
+	setup_brew
+	configure_zsh
+	configure_bash
+	install_dotfiles
+	setup_nvm
+	setup_neovim
+	install_custom_scripts
+	configure_ssh
+fi
+
