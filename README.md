@@ -18,3 +18,8 @@ curl https://raw.githubusercontent.com/bhugovilela/dotfiles/main/bootstrap.sh | 
 
 ```
 This will download the bootstrap.sh script and execute it
+
+## TODO
+- vscode settings
+- iTerm2 settings
+
