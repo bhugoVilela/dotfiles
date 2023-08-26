@@ -97,7 +97,7 @@ configure_ssh() {
 
 configure_zsh() {
 	_echo "installing oh my zsh..."
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh '' --unattended)"
 
 	cat ~/.zshrc | grep ". ~/zshrc-extras" >/dev/null
 	if [ $? -ne 0 ]; then
