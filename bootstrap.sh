@@ -99,6 +99,7 @@ configure_zsh() {
 	_echo "installing oh my zsh..."
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
+	set +e
 	cat ~/.zshrc | grep ". ~/zshrc-extras" >/dev/null
 	if [ $? -ne 0 ]; then
 		_echo "Adding .zshrc-extras to .zshrc"
@@ -107,10 +108,13 @@ configure_zsh() {
 		_echo ".zshrc-extras was already added to .zshrc"
 	fi
 	reload_path
+	set -e
 }
 
 configure_bash() {
 	_echo "configuring bash shell"
+	set +e
+	[ -f ~/.bashrc ] || touch ~/.bashrc ]
 	cat ~/.bashrc | grep ". ~/bashrc-extras" >/dev/null
 	if [ $? -ne 0 ]; then
 		_echo "Adding .bashrc-extras to .bashrc"
@@ -118,6 +122,7 @@ configure_bash() {
 	else
 		_echo ".bashrc-extras was already added to .bashrc"
 	fi
+	set -e
 }
 
 setup_brew() {
@@ -163,7 +168,7 @@ setup_local_bin() {
 }
 
 setup_nvm() {
-	mkdir ~/.nvm
+	mkdir ~/.nvm || echo ""
 	nvm install node
 }
 
@@ -176,7 +181,12 @@ setup_neovim() {
  	~/.local/share/nvim/site/pack/packer/opt/packer.nvim
 
 	reload_path
-	_echo "NeoVim installation finished. Don't forget to run PackerSync on first boot"
+
+	_echo "Running PackerSync twice"
+	nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' || echo ""
+	nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' || echo ""
+
+	_echo "NeoVim installation finished."
 }
 
 install_xcode_cmd_line_tools() {
@@ -200,9 +210,9 @@ else
 	setup_XDG_CONFIG_HOME
 	setup_local_bin
 	setup_brew
+	install_dotfiles
 	configure_zsh
 	configure_bash
-	install_dotfiles
 	setup_nvm
 	setup_neovim
 	install_custom_scripts
