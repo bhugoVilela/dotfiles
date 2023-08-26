@@ -123,7 +123,8 @@ setup_brew() {
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 	_echo "adding Homebrew to path"
-	(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/hugotest/.zprofile
+	[[ -f "$HOME/.zprofile" ]] || touch "$HOME/.zprofile"
+	(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> "$HOME/.zprofile"
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
 	_echo "running brew bundle"
@@ -187,6 +188,7 @@ else
 	# MAIN
 	set -e # exits script if any function returns non 0
 	xcode-select --install
+	read -k 1 "Installing xcode-select... Press any key once finished"
 	download_repo_if_needed
 	setup_XDG_CONFIG_HOME
 	setup_local_bin

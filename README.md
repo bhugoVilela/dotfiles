@@ -1,28 +1,7 @@
-# Dotfiles
+# Dotfiles bootstrap
 
 This is my collection of dotfiles for quickly
-getting my Dev Env up and running on a new macbook
-
-## Instalation
-
-### From scratch
-Meant to be run off a brand new macbook
-It doesn't need to have any dependencies installed
-not git, homebrew, anything.
-```
-cd ~ && curl https://raw.githubusercontent.com/bhugovilela/dotfiles/main/bootstrap.sh | zsh
-
-```
-This will download the bootstrap.sh script and execute it
-
-### From Git
-1. cd ~ 
-2. Clone the repository
-3. run `bootstrap.sh`
-
-## TODO
-- vscode settings
-- iTerm2 settings
+getting my Dev Env up and running on a new macbook.
 
 ## What does it do?
 - Installs:
@@ -50,4 +29,26 @@ This will download the bootstrap.sh script and execute it
     - stow/custom_scripts into ~/.local/bin
     - adds ~/.local/bin to $PATH
 - Configures ssh
+
+
+## Instalation
+
+### From scratch
+Meant to be run off a brand new macbook
+It doesn't need to have any dependencies installed
+not git, homebrew, anything.
+```
+cd ~ && curl https://raw.githubusercontent.com/bhugovilela/dotfiles/main/bootstrap.sh | zsh
+
+```
+This will download the bootstrap.sh script and execute it
+
+### From Git
+1. cd ~ 
+2. Clone the repository
+3. run `bootstrap.sh`
+
+## TODO
+- vscode settings
+- iTerm2 settings
 
