@@ -179,7 +179,9 @@ setup_neovim() {
 
 install_xcode_cmd_line_tools() {
 	_echo "installing xcode command line tools..."
+	set +e
 	xcode-select --install
+	set -e
 	if [ $? -ne 0 ]; then
 		_echo "already installed, skipping..."
 	else
