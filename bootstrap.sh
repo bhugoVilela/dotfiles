@@ -34,6 +34,7 @@ reload_path() {
 
 # creates symlinks
 install_dotfiles() {
+	_echo "installing dotfiles..."
 	mkdir ~/.config || echo ""
 	_echo "stowing .config"
 	stow --dir=./stow --target=$HOME/.config .config
@@ -109,6 +110,7 @@ configure_zsh() {
 }
 
 configure_bash() {
+	_echo "configuring bash shell"
 	cat ~/.bashrc | grep ". ~/bashrc-extras" >/dev/null
 	if [ $? -ne 0 ]; then
 		_echo "Adding .bashrc-extras to .bashrc"
@@ -193,8 +195,7 @@ if [[ "$1" = 'dry' ]]; then
 else
 	# MAIN
 	set -e # exits script if any function returns non 0
-	xcode-select --install
-	read -k 1 "Installing xcode-select... Press any key once finished"
+	install_xcode_cmd_line_tools
 	download_repo_if_needed
 	setup_XDG_CONFIG_HOME
 	setup_local_bin
