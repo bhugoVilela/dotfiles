@@ -192,7 +192,8 @@ setup_neovim() {
 install_xcode_cmd_line_tools() {
 	_echo "installing xcode command line tools..."
 	xcode-select --install || _echo "Already installed"
-	read -k 1 "Installing xcode-select... Press any key once finished"
+	echo "Installing xcode-select... Press any key once finished"
+	read -k 1 
 }
 
 assert_os
