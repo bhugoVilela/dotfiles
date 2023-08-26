@@ -177,6 +177,16 @@ setup_neovim() {
 	_echo "NeoVim installation finished. Don't forget to run PackerSync on first boot"
 }
 
+install_xcode_cmd_line_tools() {
+	_echo "installing xcode command line tools..."
+	xcode-select --install
+	if [ $? -ne 0 ]; then
+		_echo "already installed, skipping..."
+	else
+		read -k 1 "Installing xcode-select... Press any key once finished"
+	fi
+}
+
 assert_os
 sudo -v
 
